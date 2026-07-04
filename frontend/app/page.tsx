@@ -12,7 +12,8 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState<
     "conference" | "webinar" | "meeting"
   >("conference");
-
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(10);
   const [events, setEvents] = useState<Event[]>([]);
 
   const eventNames = {
@@ -22,11 +23,11 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/filter")
+    fetch(`http://localhost:3001/api/filter?filterBy=${selectedOption}&offset=${offset}&limit=${limit}`)
       .then((response) => response.json())
       .then((data) => setEvents(data))
       .catch((error) => console.error("Ошибка загрузки:", error));
-  }, []);
+  }, [selectedOption, offset, limit]);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -48,6 +49,20 @@ export default function Home() {
       });
   }
 
+  function handleNextPage() {
+    setOffset(offset + limit);
+  }
+  function handlePreviousPage() {
+    if (offset - limit >= 0) {
+      setOffset(offset - limit);
+    } else {
+      setOffset(0);
+    }
+  }
+  function handleLimitChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    setLimit(parseInt(e.target.value));
+    setOffset(0);
+  }
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -85,7 +100,20 @@ export default function Home() {
             Выбранный тип мероприятия: {eventNames[selectedOption]}
           </p>
         </div>
-
+        <div>
+          <label htmlFor="limit-select">Мероприятий на странице:</label>
+          <select 
+            id="limit-select"
+            value={limit} 
+            onChange={handleLimitChange}
+          >
+            <option value="2">2</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
         <button type="submit">Отправить</button>
       </form>
 
@@ -101,6 +129,10 @@ export default function Home() {
             <hr />
           </div>
         ))}
+      </div>
+      <div>
+        <button type="button" onClick={handlePreviousPage}>Предыдущая</button>
+        <button type="button" disabled={events.length < limit} onClick={handleNextPage}>Следующая</button>
       </div>
     </>
   );
