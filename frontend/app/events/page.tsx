@@ -1,6 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+
+const EventList = dynamic(() => import("./EventList"));
 
 type Event = {
   id: number;
@@ -72,15 +76,10 @@ export default function EventsPage() {
             <option value="50">50</option>
         </select>
     </div>
+    <Suspense fallback={<p>Загрузка мероприятий...</p>}>
+      <EventList events={events} eventNames={eventNames} />
+    </Suspense>
     <hr />
-    <div>
-        {events.map((event) => (
-        <div key={event.id}>
-            <p>Название: {event.name}</p>
-            <p>Тип: {eventNames[event.type]}</p>
-            <hr />
-        </div>))}
-    </div>
     <div>
         <button type="button" onClick={handlePreviousPage}>Предыдущая</button>
         <button type="button" disabled={events.length < limit} onClick={handleNextPage}>Следующая</button>
