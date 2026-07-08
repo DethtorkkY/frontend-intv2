@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
+import { useEvent } from "../contexts/EventContext";
 
 const EventList = dynamic(() => import("./EventList"));
 
@@ -13,12 +14,10 @@ type Event = {
 };
 
 export default function EventsPage() {
-    const [selectedOption, setSelectedOption] = useState<
-      "conference" | "webinar" | "meeting"
-    >("conference");
-    const [offset, setOffset] = useState(0);
-    const [limit, setLimit] = useState(10);
-    const [events, setEvents] = useState<Event[]>([]);
+  const { selectedOption, setSelectedOption } = useEvent();
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [events, setEvents] = useState<Event[]>([]);
 
   const eventNames = {
     conference: "Конференция",
@@ -47,6 +46,10 @@ export default function EventsPage() {
     setLimit(parseInt(e.target.value));
     setOffset(0);
   }
+  function handleOptionChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    setSelectedOption(e.target.value as "conference" | "webinar" | "meeting");
+    setOffset(0);
+  }
 
   return (
     <>  
@@ -59,8 +62,7 @@ export default function EventsPage() {
         id="event-select"
         name="event-type"
         value={selectedOption}
-        onChange={(e) =>
-        setSelectedOption(e.target.value as "conference" | "webinar" | "meeting")}>
+        onChange={handleOptionChange}>
         <option value="conference">Конференция</option>
         <option value="webinar">Вебинар</option>
         <option value="meeting">Встреча</option>
