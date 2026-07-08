@@ -32,6 +32,10 @@ export default function EventsPage() {
       .catch((error) => console.error("Ошибка загрузки:", error));
   }, [selectedOption, offset, limit]);
 
+  useEffect(() => {
+    console.log(selectedOption);
+  }, [selectedOption]);
+
   function handleNextPage() {
     setOffset(offset + limit);
   }
@@ -50,7 +54,7 @@ export default function EventsPage() {
     setSelectedOption(e.target.value as "conference" | "webinar" | "meeting");
     setOffset(0);
   }
-
+  
   return (
     <>  
     <Link href="/">

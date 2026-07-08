@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/dist/client/link";
-import { useState } from "react";
+import Link from "next/link";
+import { useEvent } from "./contexts/EventContext";
+import { useEffect } from "react";
 
 export default function Home() {
-  const [selectedOption, setSelectedOption] = useState<
-    "conference" | "webinar" | "meeting"
-  >("conference");
+  const { selectedOption, setSelectedOption } = useEvent();
 
   const eventNames = {
     conference: "Конференция",
@@ -14,6 +13,9 @@ export default function Home() {
     meeting: "Встреча",
   };
 
+  useEffect(() => {
+    console.log("Home:", selectedOption);
+  }, [selectedOption]);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
