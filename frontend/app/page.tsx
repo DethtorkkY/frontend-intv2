@@ -22,7 +22,7 @@ export default function Home() {
 
     const formData = new FormData(e.currentTarget);
 
-    fetch("http://localhost:3001/api/submit", {
+    fetch("https://angularinter.onrender.com/api/submit", {
       method: "POST",
       body: formData,
     })

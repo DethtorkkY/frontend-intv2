@@ -26,7 +26,7 @@ export default function EventsPage() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/filter?filterBy=${selectedOption}&offset=${offset}&limit=${limit}`)
+    fetch(`https://angularinter.onrender.com/api/filter?filterBy=${selectedOption}&offset=${offset}&limit=${limit}`)
       .then((response) => response.json())
       .then((data) => setEvents(data))
       .catch((error) => console.error("Ошибка загрузки:", error));
